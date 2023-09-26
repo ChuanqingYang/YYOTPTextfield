@@ -113,9 +113,7 @@ public struct YYOTPTextfield: View {
                 .onAppear {
                     if config.enableAutoResponse {
                         /// make the UI smoothly
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                            focusState = true
-                        }
+                        focusState = true
                     }
                 }
             
