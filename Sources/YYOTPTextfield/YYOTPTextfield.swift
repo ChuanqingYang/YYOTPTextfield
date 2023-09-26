@@ -35,6 +35,10 @@ public struct YYOTPTextfieldConfig {
     ///  the ``height``
     public var boxSize: CGSize = CGSize(width: 45, height: 45)
     
+    /// set it to true means when the input code reachs the
+    /// otpcount then it will callback completions
+    public var enableAutoCompletion: Bool = false
+    
     public init(style: Style = .rect,
                 activeBorderColor: Color = .black,
                 inactiveBorderColor: Color = .gray,
@@ -45,7 +49,8 @@ public struct YYOTPTextfieldConfig {
                 inactiveTextColor: Color = .gray,
                 cornerRadius: CGFloat = 8,
                 textFont: Font = .system(size: 36, weight: .bold, design: .rounded),
-                boxSize: CGSize = CGSize(width: 45, height: 55)) {
+                boxSize: CGSize = CGSize(width: 45, height: 55),
+                enableAutoCompletion: Bool = false) {
         self.style = style
         self.activeBorderColor = activeBorderColor
         self.inactiveBorderColor = inactiveBorderColor
@@ -57,6 +62,7 @@ public struct YYOTPTextfieldConfig {
         self.cornerRadius = cornerRadius
         self.textFont = textFont
         self.boxSize = boxSize
+        self.enableAutoCompletion = enableAutoCompletion
     }
     
 }
@@ -92,6 +98,11 @@ public struct YYOTPTextfield: View {
                 .focused($focusState)
                 .frame(width: 1, height: 1)
                 .opacity(0.001)
+                .onChange(of: otpText) { oldValue, newValue in
+                    if newValue.count == otpCount && config.enableAutoCompletion {
+                        completion(newValue)
+                    }
+                }
             
             HStack(spacing: 0) {
                 ForEach(0..<otpCount,id: \.self) { index in
