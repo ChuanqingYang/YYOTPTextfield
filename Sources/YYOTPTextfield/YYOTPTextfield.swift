@@ -39,6 +39,11 @@ public struct YYOTPTextfieldConfig {
     /// otpcount then it will callback completions
     public var enableAutoCompletion: Bool = false
     
+    /// set it to true means when the codeinput view shows the textfield
+    /// will automatically become the firstresponder which means the keyboard will show
+    /// when the codeinput view shows
+    public var enableAutoResponse: Bool = false
+    
     public init(style: Style = .rect,
                 activeBorderColor: Color = .black,
                 inactiveBorderColor: Color = .gray,
@@ -50,7 +55,8 @@ public struct YYOTPTextfieldConfig {
                 cornerRadius: CGFloat = 8,
                 textFont: Font = .system(size: 36, weight: .bold, design: .rounded),
                 boxSize: CGSize = CGSize(width: 45, height: 55),
-                enableAutoCompletion: Bool = false) {
+                enableAutoCompletion: Bool = false,
+                enableAutoResponse: Bool = false) {
         self.style = style
         self.activeBorderColor = activeBorderColor
         self.inactiveBorderColor = inactiveBorderColor
@@ -63,6 +69,7 @@ public struct YYOTPTextfieldConfig {
         self.textFont = textFont
         self.boxSize = boxSize
         self.enableAutoCompletion = enableAutoCompletion
+        self.enableAutoResponse = enableAutoResponse
     }
     
 }
@@ -101,6 +108,14 @@ public struct YYOTPTextfield: View {
                 .onChange(of: otpText) { oldValue, newValue in
                     if newValue.count == otpCount && config.enableAutoCompletion {
                         completion(newValue)
+                    }
+                }
+                .onAppear {
+                    if config.enableAutoResponse {
+                        /// make the UI smoothly
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            focusState = true
+                        }
                     }
                 }
             
