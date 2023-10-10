@@ -82,7 +82,7 @@ public struct YYOTPTextfield: View {
     public var completion:(String) -> ()
     
     @State private var otpText:String = ""
-    
+    @Binding var value: String
     @FocusState private var focusState
     @State private var isKeyboardShow: Bool = false
     
@@ -95,7 +95,18 @@ public struct YYOTPTextfield: View {
         self.otpCount = otpCount
         self.config = config
         self.completion = completion
+        _value = .constant("")
     }
+    
+    public init(otpCount: Int = 6,
+         config: YYOTPTextfieldConfig = .init(),
+        value: Binding<String>) {
+        self.otpCount = otpCount
+        self.config = config
+        _value = value
+        self.completion = { _ in }
+    }
+    
     
     public var body: some View {
         ZStack {
@@ -215,5 +226,5 @@ extension Binding where Value == String {
 
 @available(iOS 17, *)
 #Preview {
-    YYOTPTextfield { code in }
+    YYOTPTextfield(value: .constant(""))
 }
