@@ -120,6 +120,8 @@ public struct YYOTPTextfield: View {
                     if newValue.count == otpCount && config.enableAutoCompletion {
                         completion(newValue)
                     }
+                    
+                    value = newValue
                 }
                 .onAppear {
                     if config.enableAutoResponse {
